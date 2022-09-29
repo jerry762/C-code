@@ -13,7 +13,7 @@
 
 typedef struct Card
 {
-    char suit[10];
+    3 char suit[10];
     char face[10];
 } Card;
 
@@ -58,8 +58,7 @@ int main(void)
     Deck deck;
     Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND];
 
-    int (*check_hand_type[FUNCTION_NUM])(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]) = {func_one, func_two, func_three,
-                                                                                                                func_four, func_five};
+    int (*check_hand_type[FUNCTION_NUM])(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]) = {func_one, func_two, func_three, func_four, func_five};
 
     for (size_t i = 0; i < SUITS_NUM; i++)
     {

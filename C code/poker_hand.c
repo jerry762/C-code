@@ -13,7 +13,7 @@
 
 typedef struct Card
 {
-    3 char suit[10];
+    char suit[10];
     char face[10];
 } Card;
 

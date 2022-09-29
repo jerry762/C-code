@@ -29,19 +29,19 @@ void swap_cards(Card *card1, Card *card2);
 //* Five function to judge hand types.
 
 //* judge pair or two pairs.
-int func_one(Card hand_of_cards[POKER_HAND]);
+int func_one(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 //* judge three of a kind or full house.
-int func_two(Card hand_of_cards[POKER_HAND]);
+int func_two(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 //* judge four of a kind.
-int func_three(Card hand_of_cards[POKER_HAND]);
+int func_three(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 //* judge flush.
-int func_four(Card hand_of_cards[POKER_HAND]);
+int func_four(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 //* judge straight.
-int func_five(Card hand_of_cards[POKER_HAND]);
+int func_five(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 int main(void)
 {
@@ -58,8 +58,8 @@ int main(void)
     Deck deck;
     Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND];
 
-    int (*check_hand_type[FUNCTION_NUM])(Card hand_of_cards[POKER_HAND]) = {func_one, func_two, func_three,
-                                                                            func_four, func_five};
+    int (*check_hand_type[FUNCTION_NUM])(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]) = {func_one, func_two, func_three,
+                                                                                                                func_four, func_five};
 
     for (size_t i = 0; i < SUITS_NUM; i++)
     {
@@ -89,9 +89,20 @@ int main(void)
 
     for (size_t i = 0; i < HANDS_OF_CARDS; i++)
     {
-        for (size_t j = 0; j < FUNCTION_NUM; j++)
+        for (size_t j = 0; j < POKER_HAND; j++)
         {
-            printf("%s ", rank[check_hand_type[j](hands_of_cards[i])]);
+            printf("(%s, %s) ", hands_of_cards[i][j].suit, hands_of_cards[i][j].face);
+        }
+        printf("\n");
+        for (int j = FUNCTION_NUM - 1; j >= 0; j--)
+        {
+            int type = check_hand_type[j](hands_of_cards[i], faces);
+
+            if (type != 0)
+            {
+                printf("%s", rank[type - 1]);
+                break;
+            }
         }
         printf("\n\n");
     }
@@ -101,7 +112,7 @@ int main(void)
 
 void shuffle(Deck *deck)
 {
-    const size_t shuffle_times = 1000;
+    const size_t shuffle_times = 5000;
 
     srand(time(NULL));
 
@@ -133,27 +144,159 @@ void deal(Deck *deck, Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND])
     }
 }
 
-int func_one(Card hand_of_cards[POKER_HAND])
+int func_one(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 {
-    return 0;
+    int counter[FACES_NUM] = {0};
+    int rank = 0;
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        for (size_t j = 0; j < POKER_HAND; j++)
+        {
+            if (strcmp(faces[i], hand_of_cards[j].face) == 0)
+            {
+                counter[i]++;
+            }
+        }
+    }
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        if (counter[i] == 2)
+        {
+            printf("Pair's face = %s\n", faces[i]);
+            rank++;
+        }
+    }
+
+    return rank;
 }
 
-int func_two(Card hand_of_cards[POKER_HAND])
+int func_two(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 {
-    return 0;
+    int counter[FACES_NUM] = {0};
+    int rank = 0;
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        for (size_t j = 0; j < POKER_HAND; j++)
+        {
+            if (strcmp(faces[i], hand_of_cards[j].face) == 0)
+            {
+                counter[i]++;
+            }
+        }
+    }
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        if (counter[i] == 3)
+        {
+            printf("Three of a kind's face = %s\n", faces[i]);
+            rank = 3;
+            for (size_t j = 0; j < FACES_NUM; j++)
+            {
+                if (counter[j] == 2)
+                {
+                    printf("Pair's face = %s\n", faces[j]);
+                    rank++;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    return rank;
 }
 
-int func_three(Card hand_of_cards[POKER_HAND])
+int func_three(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 {
-    return 0;
+    int counter[FACES_NUM] = {0};
+    int rank = 0;
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        for (size_t j = 0; j < POKER_HAND; j++)
+        {
+            if (strcmp(faces[i], hand_of_cards[j].face) == 0)
+            {
+                counter[i]++;
+            }
+        }
+    }
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        if (counter[i] == 4)
+        {
+            printf("Four of a kind's face = %s\n", faces[i]);
+            rank = 5;
+            break;
+        }
+    }
+
+    return rank;
 }
 
-int func_four(Card hand_of_cards[POKER_HAND])
+int func_four(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 {
-    return 0;
+    int counter[FACES_NUM] = {0};
+    int rank = 0;
+
+    for (size_t i = 0; i < FACES_NUM; i++)
+    {
+        for (size_t j = 0; j < POKER_HAND; j++)
+        {
+            if (strcmp(faces[i], hand_of_cards[j].face) == 0)
+            {
+                counter[i]++;
+            }
+        }
+    }
+
+    for (size_t i = 0; i < 9; i++)
+    {
+        if (counter[i + 0] == 1 &&
+            counter[i + 1] == 1 &&
+            counter[i + 2] == 1 &&
+            counter[i + 3] == 1 &&
+            counter[i + 4] == 1)
+        {
+            printf("Straight's face = %s\n", faces[i]);
+            rank = 6;
+            break;
+        }
+    }
+
+    if (counter[9] == 1 &&
+        counter[10] == 1 &&
+        counter[11] == 1 &&
+        counter[12] == 1 &&
+        counter[0] == 1)
+    {
+        printf("Straight's face = %s\n", faces[9]);
+        rank = 6;
+    }
+
+    return rank;
 }
 
-int func_five(Card hand_of_cards[POKER_HAND])
+int func_five(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 {
-    return 0;
+    int rank = 7;
+
+    for (size_t i = 1; i < POKER_HAND; i++)
+    {
+        if (strcmp(hand_of_cards[0].suit, hand_of_cards[i].suit) != 0)
+        {
+            rank = 0;
+            break;
+        }
+    }
+
+    if (rank == 7)
+        printf("Flush's suit = %s\n", hand_of_cards[0].suit);
+
+    return rank;
 }

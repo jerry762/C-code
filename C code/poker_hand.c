@@ -24,7 +24,7 @@ typedef struct Deck
 
 void shuffle(Deck *deck);
 void deal(Deck *deck, Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND]);
-void swap_cards(Card *card1, Card *card2);
+void swap_two_cards(Card *card1, Card *card2);
 
 //* Five function to judge hand types.
 
@@ -37,10 +37,10 @@ int func_two(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM])
 //* judge four of a kind.
 int func_three(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
-//* judge flush.
+//* judge straight.
 int func_four(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
-//* judge straight.
+//* judge flush.
 int func_five(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
 
 int main(void)
@@ -120,11 +120,11 @@ void shuffle(Deck *deck)
         int seed1 = rand() % CARDS_NUM;
         int seed2 = rand() % CARDS_NUM;
 
-        swap_cards(&deck->cards[seed1], &deck->cards[seed2]);
+        swap_two_cards(&deck->cards[seed1], &deck->cards[seed2]);
     }
 }
 
-void swap_cards(Card *card1, Card *card2)
+void swap_two_cards(Card *card1, Card *card2)
 {
     Card temp_card = *card1;
     *card1 = *card2;

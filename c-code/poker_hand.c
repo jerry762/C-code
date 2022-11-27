@@ -26,6 +26,8 @@ void shuffle(Deck *deck);
 void deal(Deck *deck, Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND]);
 void swap_two_cards(Card *card1, Card *card2);
 
+typedef int (*check_hand_type)(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]);
+
 //* Five function to judge hand types.
 
 //* judge pair or two pairs.
@@ -58,7 +60,7 @@ int main(void)
     Deck deck;
     Card hands_of_cards[HANDS_OF_CARDS][POKER_HAND];
 
-    int (*check_hand_type[FUNCTION_NUM])(const Card hand_of_cards[POKER_HAND], const char *faces[FACES_NUM]) = {func_one, func_two, func_three, func_four, func_five};
+    check_hand_type func_arr[FUNCTION_NUM] = {func_one, func_two, func_three, func_four, func_five};
 
     for (size_t i = 0; i < SUITS_NUM; i++)
     {
@@ -95,7 +97,7 @@ int main(void)
         printf("\n");
         for (int j = FUNCTION_NUM - 1; j >= 0; j--)
         {
-            int type = check_hand_type[j](hands_of_cards[i], faces);
+            int type = func_arr[j](hands_of_cards[i], faces);
 
             if (type != 0)
             {

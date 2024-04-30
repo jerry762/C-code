@@ -56,7 +56,8 @@ dkms.conf
 .vscode
 test.c
 test
+1.c
+2.c
+12.c
 poker_hand_straight_flush.c
-
-
 
